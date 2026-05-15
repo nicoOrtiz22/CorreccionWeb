@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/pedidoController')
 
-router.post('/',controller.registrarPedido);
+router.post('/pedidos',controller.registrarPedido);
 
-router.get('/pedidos', controller.listarPedido);
+router.get('/ver-pedidos', controller.listarPedido);
 
 module.exports = router;
