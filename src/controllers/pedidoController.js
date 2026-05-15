@@ -15,20 +15,18 @@ function registrarPedido(req, res) {
         ingrediente_pimenton
     } = req.body;
 
-    // 1. Creamos el array de ingredientes PRIMERO para poder contar cuántos hay
     const ingredientes = [
         ingrediente_jamon, ingrediente_quesoext, ingrediente_champ,
         ingrediente_cebolla, ingrediente_aceituna, ingrediente_tocino,
         ingrediente_pimenton
     ].filter(ing => ing !== undefined);
 
-    // 2. Definimos precios base y costo de ingredientes extra por tamaño
     let precioBase = 0;
     let valorIngredienteExtra = 0;
 
     if (tamañopizza === "Chica") {
         precioBase = 3990;
-        valorIngredienteExtra = 500; // Valor extra por ingrediente en pizza chica
+        valorIngredienteExtra = 500; 
     } else if (tamañopizza === "Mediana") {
         precioBase = 5990;
         valorIngredienteExtra = 800;
@@ -37,24 +35,21 @@ function registrarPedido(req, res) {
         valorIngredienteExtra = 1200;
     }
 
-    // 3. Calculamos ingredientes extra (asumiendo que los primeros 3 son gratis/base)
     const limiteIngredientesBase = 3;
     const extras = ingredientes.length > limiteIngredientesBase
         ? ingredientes.length - limiteIngredientesBase
         : 0;
 
-    // 4. Aplicamos la fórmula: (Base + (Extras * Valor Extra)) * Cantidad
     const precioUnitario = precioBase + (extras * valorIngredienteExtra);
     const precioTotal = precioUnitario * parseInt(cantidadpizzas);
 
-    // 5. Guardamos el pedido (Asegúrate que tu modelo acepte estos datos)
-    // En pedidoController.js, cuando llamas al modelo:
+
     pedidoModel.registrarPedido({
         nombre: nombre,
         tamañopizza: tamañopizza,
         ingredientes: ingredientes,
         cantidadpizzas: cantidadpizzas,
-        precioTotal: precioTotal // Este es el valor que calculamos en el paso anterior
+        precioTotal: precioTotal 
     });
 
     console.log(`Pedido de ${nombre} registrado. Total: $${precioTotal}`);
@@ -99,5 +94,3 @@ function listarPedido(req, res) {
 }
 
 module.exports = { registrarPedido, listarPedido }
-
-//precio base del tamaño + (ingredientes extra × valor extra del tamaño)
