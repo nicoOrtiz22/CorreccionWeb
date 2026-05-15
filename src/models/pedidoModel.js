@@ -1,18 +1,23 @@
-let nombreCliente = []
-let pizzaSize = []
-let ingredientesPizza = []
-let cantidadPizzas = []
-let pedido = []
+// Usamos un solo arreglo para almacenar objetos de pedido
+let pedidos = []; 
 
-function guardarPedido(nombre, size, ingredientes, cantidad){
-    nombreCliente.push(nombre);
-    pizzaSize.push(size);
-    ingredientesPizza.push(ingredientes);
-    cantidadPizzas.push(cantidad);
+/**
+ * Guarda un objeto de pedido completo en el arreglo.
+ * @param {Object} datosPedido - Objeto con nombre, tamaño, ingredientes, etc.
+ */
+function registrarPedido(datosPedido) {
+    pedidos.push(datosPedido);
 }
 
-function obtenerPedido(){
-    return pedido;
+/**
+ * Retorna la lista completa de pedidos.
+ */
+function obtenerPedido() {
+    return pedidos;
 }
 
-module.exports = {guardarPedido, obtenerPedido};
+// Exportamos con los nombres que espera el controlador
+module.exports = { 
+    registrarPedido, 
+    obtenerPedido 
+};

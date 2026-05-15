@@ -1,7 +1,3 @@
-//ola pato, si ves esto, intenta adaptar el registrarnota del controlador 
-
-
-//>eu niko solo en caso de fijate en Routes linea 5 creo q no esta tomando bien hecha/conectada la ruta
 
 const pedidoModel = require('../models/pedidoModel');
 
@@ -43,25 +39,27 @@ function registrarPedido(req, res) {
 
     // 3. Calculamos ingredientes extra (asumiendo que los primeros 3 son gratis/base)
     const limiteIngredientesBase = 3;
-    const extras = ingredientes.length > limiteIngredientesBase 
-                   ? ingredientes.length - limiteIngredientesBase 
-                   : 0;
+    const extras = ingredientes.length > limiteIngredientesBase
+        ? ingredientes.length - limiteIngredientesBase
+        : 0;
 
     // 4. Aplicamos la fórmula: (Base + (Extras * Valor Extra)) * Cantidad
     const precioUnitario = precioBase + (extras * valorIngredienteExtra);
     const precioTotal = precioUnitario * parseInt(cantidadpizzas);
 
     // 5. Guardamos el pedido (Asegúrate que tu modelo acepte estos datos)
+    // En pedidoController.js, cuando llamas al modelo:
     pedidoModel.registrarPedido({
-        nombre,
-        tamañopizza,
-        ingredientes,
-        cantidadpizzas,
-        precioTotal // Guardamos el total para mostrarlo después
+        nombre: nombre,
+        tamañopizza: tamañopizza,
+        ingredientes: ingredientes,
+        cantidadpizzas: cantidadpizzas,
+        precioTotal: precioTotal // Este es el valor que calculamos en el paso anterior
     });
 
     console.log(`Pedido de ${nombre} registrado. Total: $${precioTotal}`);
-    res.send(`<h1>Pedido recibido con éxito</h1><p>Total a pagar: $${precioTotal}</p><a href="/pedidos">Ver todos los pedidos</a>`);
+    res.redirect('/pedidos');
+
 }
 
 function listarPedido(req, res) {
@@ -100,6 +98,6 @@ function listarPedido(req, res) {
             `)
 }
 
-module.exports = {registrarPedido, listarPedido}
+module.exports = { registrarPedido, listarPedido }
 
 //precio base del tamaño + (ingredientes extra × valor extra del tamaño)
