@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos</title>
+</head>
+
+<body>
+    <form action="/pedidos" method="post">
+        <label for="">Nombre cliente</label>
+        <input type="text" name="nombre" id="nombre">
+        <br>
+        <label for="">Tamaño de la pizza</label>
+        <br>
+        <label for="">Chica</label>
+        <input type="radio" name="tamañopizza" id="pizzaChica" value="Chica">
+        <br>
+        <label for="">Mediana</label>
+        <input type="radio" name="tamañopizza" id="pizzaMediana" value="Mediana">
+        <br>
+        <label for="">Grande</label>
+        <input type="radio" name="tamañopizza" id="pizzaGrande" value="Grande">
+        <br>
+        <br>
+        <label for="">Ingredientes</label>
+        <br>
+        <br>
+        <input type="checkbox" name="ingrediente_jamon" id="ingrediente_jamon" value="Jamón">
+        <label for="">Jamón</label>
+        <br>
+        <input type="checkbox" name="ingrediente_quesoext" id="ingrediente_quesoext" value="Queso extra">
+        <label for="">Queso extra</label>
+        <br>
+        <input type="checkbox" name="ingrediente_champ" id="ingrediente_champ" value="Champiñones">
+        <label for="">Champiñones</label>
+        <br>
+        <input type="checkbox" name="ingrediente_aceituna" id="ingrediente_aceituna" value="Aceituna">
+        <label for="">Aceituna</label>
+        <br>
+        <input type="checkbox" name="ingrediente_cebolla" id="ingrediente_cebolla" value="Cebolla">
+        <label for="">Cebolla</label>
+        <br>
+        <input type="checkbox" name="ingrediente_pimenton" id="ingrediente_pimenton" value="Pimentón">
+        <label for="">Pimentón</label>
+        <br>
+        <input type="checkbox" name="ingrediente_tocino" id="ingrediente_tocino" value="Tocino">
+        <label for="">Tocino</label>
+        <br>
+        <br>
+        <label for="">Cantidad de pizzas</label>
+        <br>
+        <input type="number" name="cantidadpizzas" id="cantidadpizzas" min="1" max="10">
+        <br>
+        <button type="submit">Enviar pedido</button>
+        <br>
+        <a href="">Ver pedidos realizados</a>
+
+    </form>
+</body>
+
+</html>
