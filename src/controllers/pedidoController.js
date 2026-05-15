@@ -6,7 +6,6 @@
 const pedidoModel = require('../models/pedidoModel');
 
 function registrarPedido(req, res) {
-    // 1. Extraemos los nombres exactos que definiste en el atributo 'name' del HTML
     const {
         nombre,
         tamañopizza,
@@ -19,37 +18,50 @@ function registrarPedido(req, res) {
         ingrediente_tocino,
         ingrediente_pimenton
     } = req.body;
-    var precioPizzaChica = 0;
-    var precioPizzaMediana = 0;
-    var precioPizzaGrande = 0;
 
-
-    if (tamañopizza == pizzaChica && ingredientes.length <= 3) {
-        precioPizzaChica = 3990;
-    }
-    else if (tamañopizza == pizzaMediana && ingredientes.length <= 3) {
-        precioPizzaChica = 5990;
-    }
-    else if (tamañopizza == pizzaGrande && ingredientes.length <= 3) {
-        precioPizzaChica = 8490;
-    }
-
-
-
+    // 1. Creamos el array de ingredientes PRIMERO para poder contar cuántos hay
     const ingredientes = [
         ingrediente_jamon, ingrediente_quesoext, ingrediente_champ,
         ingrediente_cebolla, ingrediente_aceituna, ingrediente_tocino,
         ingrediente_pimenton
     ].filter(ing => ing !== undefined);
 
+    // 2. Definimos precios base y costo de ingredientes extra por tamaño
+    let precioBase = 0;
+    let valorIngredienteExtra = 0;
 
+    if (tamañopizza === "Chica") {
+        precioBase = 3990;
+        valorIngredienteExtra = 500; // Valor extra por ingrediente en pizza chica
+    } else if (tamañopizza === "Mediana") {
+        precioBase = 5990;
+        valorIngredienteExtra = 800;
+    } else if (tamañopizza === "Grande") {
+        precioBase = 8490;
+        valorIngredienteExtra = 1200;
+    }
 
-    console.log(`Pedido de ${nombre}: ${cantidadpizzas} pizza(s) ${tamañopizza}.`);
-    console.log(`Ingredientes: ${ingredientes.join(', ')}`);
+    // 3. Calculamos ingredientes extra (asumiendo que los primeros 3 son gratis/base)
+    const limiteIngredientesBase = 3;
+    const extras = ingredientes.length > limiteIngredientesBase 
+                   ? ingredientes.length - limiteIngredientesBase 
+                   : 0;
 
+    // 4. Aplicamos la fórmula: (Base + (Extras * Valor Extra)) * Cantidad
+    const precioUnitario = precioBase + (extras * valorIngredienteExtra);
+    const precioTotal = precioUnitario * parseInt(cantidadpizzas);
 
+    // 5. Guardamos el pedido (Asegúrate que tu modelo acepte estos datos)
+    pedidoModel.registrarPedido({
+        nombre,
+        tamañopizza,
+        ingredientes,
+        cantidadpizzas,
+        precioTotal // Guardamos el total para mostrarlo después
+    });
 
-    res.send("Pedido recibido con éxito");
+    console.log(`Pedido de ${nombre} registrado. Total: $${precioTotal}`);
+    res.send(`<h1>Pedido recibido con éxito</h1><p>Total a pagar: $${precioTotal}</p><a href="/pedidos">Ver todos los pedidos</a>`);
 }
 
 function listarPedido(req, res) {
@@ -59,7 +71,7 @@ function listarPedido(req, res) {
         <tr>
             <td>${n.nombre}</td>
             <td>${n.tamañopizza}</td>
-            <td>${n.ingredientes.join(', ')}</td>
+            <td>${n.ingredientes.join(', ') || 'Sin ingredientes'}</td>
             <td>${n.cantidadpizzas}</td>
         </tr>
         `).join('');
@@ -76,6 +88,7 @@ function listarPedido(req, res) {
                         <th>Tamaño pizza</th>
                         <th>Ingredientes</th>
                         <th>Cantidad de pizzas</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -86,5 +99,7 @@ function listarPedido(req, res) {
         }
             `)
 }
+
+module.exports = {registrarPedido, listarPedido}
 
 //precio base del tamaño + (ingredientes extra × valor extra del tamaño)

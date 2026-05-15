@@ -4,4 +4,6 @@ const controller = require('../controllers/pedidoController')
 
 router.post('/',controller.registrarPedido);
 
+router.get('/pedidos', controller.listarPedido);
+
 module.exports = router;
