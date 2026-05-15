@@ -52,7 +52,6 @@ function registrarPedido(req, res) {
         precioTotal: precioTotal 
     });
 
-    console.log(`Pedido de ${nombre} registrado. Total: $${precioTotal}`);
     res.redirect('/pedidos');
 
 }
@@ -72,7 +71,7 @@ function listarPedido(req, res) {
     res.send(`
             <h1>Pedidos realizados</h1>
             ${pedidos.length === 0
-            ? '<p>No hay notas</p>'
+            ? '<p>No hay pedidos</p>'
             : `
             <table>
                 <thead>
