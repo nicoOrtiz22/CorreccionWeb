@@ -52,7 +52,7 @@ function registrarPedido(req, res) {
         precioTotal: precioTotal 
     });
 
-    res.redirect('/pedidos');
+    res.redirect('/pedidos/ver');
 
 }
 
@@ -70,7 +70,7 @@ function listarPedido(req, res) {
 
     res.send(`
             <h1>Pedidos realizados</h1>
-            ${pedidos.length === 0
+            ${pedido.length === 0
             ? '<p>No hay pedidos</p>'
             : `
             <table>
@@ -80,7 +80,6 @@ function listarPedido(req, res) {
                         <th>Tamaño pizza</th>
                         <th>Ingredientes</th>
                         <th>Cantidad de pizzas</th>
-                        
                     </tr>
                 </thead>
                 <tbody>
