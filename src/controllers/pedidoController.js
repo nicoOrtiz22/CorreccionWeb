@@ -26,7 +26,7 @@ function registrarPedido(req, res) {
 
     if (tamañopizza === "Chica") {
         precioBase = 3990;
-        valorIngredienteExtra = 500; 
+        valorIngredienteExtra = 500;
     } else if (tamañopizza === "Mediana") {
         precioBase = 5990;
         valorIngredienteExtra = 800;
@@ -77,21 +77,27 @@ function listarPedido(req, res) {
             ${pedido.length === 0
             ? '<p>No hay pedidos</p>'
             : `
-            <table border="1" style="border-collapse: collapse; text-align: left; width: 80%;>
+            <table border="1" style="border-collapse: collapse; text-align: left; width: 80%;">
                 <thead>
                     <tr>
                         <th>Nombre</th>
                         <th>Tamaño pizza</th>
                         <th>Ingredientes</th>
-                        <th>Cantidad de pizzas</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Total Pedido</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${filas}
                 </tbody>
             </table>
+            
+            <h3 style="margin-top: 20px;">Total Acumulado de Ventas: $${totalAcumulado}</h3>
                 `
         }
+            <br>
+            <a href="/">Volver al formulario</a>
             `)
 }
 
