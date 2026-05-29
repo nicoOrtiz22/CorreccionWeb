@@ -63,6 +63,11 @@ function listarPedido(req, res) {
     const pedido = pedidoModel.obtenerPedido();
     const totalAcumulado = pedidoModel.obtenerTotalAcumulado();
 
+    let pedidoMasCaro = null;
+    if (pedido.length > 0) {
+        pedidoMasCaro = pedido.reduce((prev, current) => (prev.precioTotal > current.precioTotal) ? prev : current);
+    }
+
     const filas = pedido.map(n => `
         <tr>
             <td>${n.nombre}</td>
@@ -73,6 +78,21 @@ function listarPedido(req, res) {
             <td>$${n.precioTotal.toLocaleString()}</td>
         </tr>
         `).join('');
+
+    const seccionPedidoMasCaro = pedidoMasCaro ? `
+        <div class="card mb-4 border-warning shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">⭐ Pedido más caro realizado</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Cliente:</strong> ${pedidoMasCaro.nombre} | 
+                    <strong>Tamaño:</strong> ${pedidoMasCaro.tamañopizza} | 
+                    <strong>Total:</strong> <span class="badge bg-danger fs-6">$${pedidoMasCaro.precioTotal.toLocaleString()}</span>
+                </p>
+            </div>
+        </div>
+    ` : '';
 
     res.send(`
 <!DOCTYPE html>
@@ -112,6 +132,8 @@ function listarPedido(req, res) {
         ${pedido.length === 0
             ? '<div class="alert alert-info">No hay pedidos registrados aún.</div>'
             : `
+            ${seccionPedidoMasCaro}
+
             <div class="table-responsive shadow-sm rounded">
                 <table class="table table-striped table-hover align-middle mb-0">
                     <thead class="table-dark">

@@ -33,7 +33,7 @@
 
     <div class="container mt-4">
         <h1 class="mb-4">Realizar Pedido de Pizza</h1>
-        <form action="/pedidos" method="post" class="shadow p-4 rounded bg-light">
+        <form id="formPedido" action="/pedidos" method="post" class="shadow p-4 rounded bg-light">
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre cliente</label>
                 <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Ingrese su nombre" required>
@@ -108,6 +108,11 @@
                 <input type="number" name="cantidadpizzas" id="cantidadpizzas" class="form-control" min="1" max="10" value="1" required>
             </div>
 
+            <div class="alert alert-primary d-flex justify-content-between align-items-center mb-3">
+                <strong>Precio estimado:</strong>
+                <span id="precioPreview" class="fs-4 fw-bold">$0</span>
+            </div>
+
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary btn-lg">Enviar pedido</button>
             </div>
@@ -118,8 +123,98 @@
         </div>
     </div>
 
+    <!-- Modal de Verificación -->
+    <div class="modal fade" id="modalVerificacion" tabindex="-1" aria-labelledby="modalVerificacionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalVerificacionLabel">Confirmar su Pedido</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="modalBody" class="modal-body">
+                    <!-- El resumen se inyectará aquí -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="confirmarEnvio" class="btn btn-primary">Confirmar y Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap 5 JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const form = document.getElementById('formPedido');
+        const precioPreview = document.getElementById('precioPreview');
+        const modalBody = document.getElementById('modalBody');
+        const btnConfirmar = document.getElementById('confirmarEnvio');
+        const modalElement = new bootstrap.Modal(document.getElementById('modalVerificacion'));
+
+        function calcularPrecio() {
+            const tamaño = form.querySelector('input[name="tamañopizza"]:checked');
+            const ingredientesChecked = form.querySelectorAll('input[type="checkbox"]:checked');
+            const cantidad = parseInt(document.getElementById('cantidadpizzas').value) || 0;
+
+            if (!tamaño) {
+                precioPreview.textContent = "$0";
+                return 0;
+            }
+
+            let precioBase = 0;
+            let valorExtra = 0;
+
+            if (tamaño.value === "Chica") {
+                precioBase = 3990;
+                valorExtra = 500;
+            } else if (tamaño.value === "Mediana") {
+                precioBase = 5990;
+                valorExtra = 800;
+            } else if (tamaño.value === "Grande") {
+                precioBase = 8490;
+                valorExtra = 1200;
+            }
+
+            const extras = Math.max(0, ingredientesChecked.length - 3);
+            const totalUnitario = precioBase + (extras * valorExtra);
+            const totalFinal = totalUnitario * cantidad;
+
+            precioPreview.textContent = "$" + totalFinal.toLocaleString('es-CL');
+            return totalFinal;
+        }
+
+        form.addEventListener('change', calcularPrecio);
+        form.querySelector('#cantidadpizzas').addEventListener('input', calcularPrecio);
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value;
+            const tamaño = form.querySelector('input[name="tamañopizza"]:checked').value;
+            const ingredientes = Array.from(form.querySelectorAll('input[type="checkbox"]:checked')).map(i => i.value);
+            const cantidad = document.getElementById('cantidadpizzas').value;
+            const total = precioPreview.textContent;
+
+            modalBody.innerHTML = `
+                <p><strong>Cliente:</strong> ${nombre}</p>
+                <p><strong>Tamaño:</strong> ${tamaño}</p>
+                <p><strong>Ingredientes:</strong> ${ingredientes.length > 0 ? ingredientes.join(', ') : 'Solo base'}</p>
+                <p><strong>Cantidad:</strong> ${cantidad}</p>
+                <hr>
+                <h4 class="text-end">Total: ${total}</h4>
+            `;
+
+            modalElement.show();
+        });
+
+        btnConfirmar.addEventListener('click', function() {
+            form.submit();
+        });
+
+        // Inicializar precio
+        calcularPrecio();
+    </script>
 </body>
 
 </html>
