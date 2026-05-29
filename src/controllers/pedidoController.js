@@ -40,15 +40,17 @@ function registrarPedido(req, res) {
         ? ingredientes.length - limiteIngredientesBase
         : 0;
 
+    const cantidad = parseInt(cantidadpizzas) || 1;
+    
     const precioUnitario = precioBase + (extras * valorIngredienteExtra);
     const precioTotal = precioUnitario * parseInt(cantidadpizzas);
 
 
     pedidoModel.registrarPedido({
-        nombre: nombre,
-        tamañopizza: tamañopizza,
+        nombre: nombre || "Cliente anonimo",
+        tamañopizza: tamañopizza || "no especificado",
         ingredientes: ingredientes,
-        cantidadpizzas: cantidadpizzas,
+        cantidadpizzas: cantidad,
         precioUnitario: precioUnitario,
         precioTotal: precioTotal
     });
