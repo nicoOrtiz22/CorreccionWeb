@@ -49,7 +49,8 @@ function registrarPedido(req, res) {
         tamañopizza: tamañopizza,
         ingredientes: ingredientes,
         cantidadpizzas: cantidadpizzas,
-        precioTotal: precioTotal 
+        precioUnitario: precioUnitario,
+        precioTotal: precioTotal
     });
 
     res.redirect('/pedidos/ver');
@@ -58,6 +59,7 @@ function registrarPedido(req, res) {
 
 function listarPedido(req, res) {
     const pedido = pedidoModel.obtenerPedido();
+    const totalAcumulado = pedidoModel.obtenerTotalAcumulado();
 
     const filas = pedido.map(n => `
         <tr>
@@ -65,6 +67,8 @@ function listarPedido(req, res) {
             <td>${n.tamañopizza}</td>
             <td>${n.ingredientes.join(', ') || 'Sin ingredientes'}</td>
             <td>${n.cantidadpizzas}</td>
+            <td>$${n.precioUnitario}</td>
+            <td>$${n.precioTotal}</td>
         </tr>
         `).join('');
 
@@ -73,7 +77,7 @@ function listarPedido(req, res) {
             ${pedido.length === 0
             ? '<p>No hay pedidos</p>'
             : `
-            <table>
+            <table border="1" style="border-collapse: collapse; text-align: left; width: 80%;>
                 <thead>
                     <tr>
                         <th>Nombre</th>
